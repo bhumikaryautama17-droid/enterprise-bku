@@ -1,0 +1,51 @@
+﻿Line 560:   display: grid;
+Line 561:   grid-template-columns: 3fr 1fr;
+Line 562:   gap: 20px;
+Line 563: }
+Line 564: 
+Line 565: /* Standard Tables Styles */
+Line 566: .table-container {
+Line 567:   overflow-x: auto;
+Line 568:   border: 1px solid var(--border-color);
+Line 569:   border-radius: 8px;
+Line 570:   background: var(--bg-secondary);
+Line 571: }
+Line 572: 
+Line 573: table {
+Line 574:   width: 100%;
+Line 575:   border-collapse: collapse;
+Line 576:   text-align: left;
+Line 577:   font-size: 12px;
+Line 578: }
+Line 579: 
+Line 580: th {
+Line 581:   background-color: var(--bg-tertiary);
+Line 582:   padding: 12px 16px;
+Line 583:   font-weight: 700;
+Line 584:   color: var(--text-secondary);
+Line 585:   border-bottom: 1px solid var(--border-color);
+Line 586:   text-transform: uppercase;
+Line 587:   font-size: 10px;
+Line 588:   letter-spacing: 0.5px;
+Line 589: }
+Line 590: 
+Line 591: td {
+Line 592:   padding: 12px 16px;
+Line 593:   border-bottom: 1px solid var(--border-color);
+Line 594:   color: var(--text-primary);
+Line 595: }
+Line 596: 
+Line 597: tr:hover td {
+Line 598:   background-color: rgba(255, 255, 255, 0.02);
+Line 599: }
+Line 600: 
+Line 601: /* Status Pill badge */
+Line 602: .status-pill {
+Line 603:   display: inline-flex;
+Line 604:   align-items: center;
+Line 605:   padding: 2px 8px;
+Line 606:   border-radius: 20px;
+Line 607:   font-size: 9px;
+Line 608:   font-weight: 700;
+Line 609:   text-transform: uppercase;
+Line 610: }
