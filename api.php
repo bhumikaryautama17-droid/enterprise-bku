@@ -19,12 +19,40 @@ ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 
 // Handle CORS preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
+}
+
+// Check if this is a zip deployment request
+if (isset($_GET['action']) && $_GET['action'] === 'deploy') {
+    $key = isset($_GET['key']) ? $_GET['key'] : (isset($_POST['key']) ? $_POST['key'] : '');
+    define('DEPLOY_KEY', 'enterprise.bku.my.id'); // Secret deploy key
+    if ($key !== DEPLOY_KEY) {
+        header('HTTP/1.0 403 Forbidden');
+        echo json_encode(['success' => false, 'error' => 'Forbidden: Invalid Deploy Key']);
+        exit;
+    }
+    
+    if (!isset($_FILES['zip'])) {
+        echo json_encode(['success' => false, 'error' => 'Missing zip file']);
+        exit;
+    }
+    
+    $zipFile = $_FILES['zip']['tmp_name'];
+    $zip = new ZipArchive;
+    if ($zip->open($zipFile) === TRUE) {
+        // Extract to current directory
+        $zip->extractTo(__DIR__);
+        $zip->close();
+        echo json_encode(['success' => true, 'message' => 'Deploy successful: files updated on cPanel!']);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Failed to open zip archive']);
+    }
+    exit;
 }
 
 // Parse request payload first
