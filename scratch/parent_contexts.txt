@@ -1,0 +1,36 @@
+﻿Match 1 at Index 37942 (Length: 151207)
+  Last ID found before match: id="pdPaper"
+  HTML context before: quo; <span>Pengajuan Baru</span></div>
+
+          <!-- Paper Form -->
+          <div class="paper" id="pdPaper">
+            <div class="paper-hdr">
+              <div class="paper-logo-cell" style="text-align:center; vertical-align:middle; justify-content:center; display:flex; flex-direction:column; align-items:center;">
+                <img src="
+---------------------------------------------------
+Match 2 at Index 200034 (Length: 12890)
+  Last ID found before match: id="prPaper"
+  HTML context before: saquo; Purchase Request (PR) &rsaquo; <span>Buat PR Baru</span></div>
+          <div class="paper" id="prPaper">
+            <div class="paper-hdr">
+              <div class="paper-logo-cell" style="text-align:center; vertical-align:middle; justify-content:center; display:flex; flex-direction:column; align-items:center;">
+                <img src="
+---------------------------------------------------
+Match 3 at Index 308551 (Length: 12890)
+  No ID found within 2000 chars before
+  HTML context before: ox; max-width:800px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:12px; background-color:#e0e0e0;">
+          <tr>
+            <td style="width:15%; text-align:center; border:1.5px solid #111; padding:6px; vertical-align:middle;">
+              <img src="
+---------------------------------------------------
+Match 4 at Index 337184 (Length: 12890)
+  No ID found within 2000 chars before
+  HTML context before: id #111; box-sizing:border-box; max-width:1080px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:8px;">
+          <tr>
+            <td style="width:25%; text-align:center; border:1px solid #111; padding:6px; vertical-align:middle;">
+              <img src="
+---------------------------------------------------
