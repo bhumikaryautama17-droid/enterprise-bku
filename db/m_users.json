@@ -1,0 +1,15 @@
+[
+  {"id":"USR-1","username":"mona.asrani","name":"Mona Asrani","role":"Supervisor","dept":"HRGA","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-2","username":"rosalia.natalia","name":"Rosalia Natalia","role":"Project Manager","dept":"Management","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-3","username":"putri.amalia","name":"Putri Amalia","role":"Finance","dept":"Finance","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-4","username":"rosmina.rabbang","name":"Rosmina Rabbang","role":"Supervisor","dept":"SHE","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-5","username":"erwin.eka","name":"Erwin Eka","role":"Supervisor","dept":"External","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-6","username":"yusril","name":"Yusril","role":"Supervisor","dept":"QAQC","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-7","username":"roymon.biang","name":"Roymon Biang","role":"Supervisor","dept":"Engineering","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-8","username":"muh.said","name":"Muh. Said","role":"Supervisor","dept":"Plant","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-9","username":"laode.rusman","name":"Laode Rusman","role":"Supervisor","dept":"Eksplorasi","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-10","username":"idul.yusuf","name":"Muh Idul Adhan Yusuf","role":"User","dept":"HRGA","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-11","username":"saiful.basri","name":"Saiful Basri","role":"User","dept":"SHE","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-12","username":"admin","name":"System Administrator","role":"Administrator","dept":"IT","password":"BARAindah@2026","signature":"","status":"Active"},
+  {"id":"USR-13","username":"budi.ktt","name":"Budi KTT","role":"KTT","dept":"Management","password":"BARAindah@2026","signature":"","status":"Active"}
+]
