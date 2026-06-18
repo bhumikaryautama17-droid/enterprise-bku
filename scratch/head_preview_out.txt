@@ -1,0 +1,45 @@
+﻿Line 1: <!DOCTYPE html>
+Line 2: <html lang="id">
+Line 3: <head>
+Line 4: <meta charset="utf-8">
+Line 5: <title>Bara Indah Sinergi Group – E-Procurement System</title>
+Line 6: <meta name="viewport" content="width=device-width, initial-scale=1">
+Line 7: <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+Line 8: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+Line 9: <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+Line 10: <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+Line 11: <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+Line 12: <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+Line 13: <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+Line 14: <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+Line 15: 
+Line 16: <style>
+Line 17: /* ============================================================
+Line 18:    ROOT VARIABLES & RESET
+Line 19:    ============================================================ */
+Line 20: :root {
+Line 21:   --bg:#f8fafc; --bg2:#ffffff; --bg3:#f1f5f9;
+Line 22:   --card:#ffffff; --border:#e2e8f0; --glow:rgba(14,165,233,.18);
+Line 23:   --t1:#0f172a; --t2:#475569; --t3:#64748b;
+Line 24:   --cy:#0ea5e9; --bl:#2563eb; --gr:#10b981; --or:#f59e0b; --rd:#ef4444; --pu:#d946ef;
+Line 25:   --tf:.2s cubic-bezier(.4,0,.2,1); --tn:.3s cubic-bezier(.4,0,.2,1);
+Line 26:   --fn:'Outfit',-apple-system,sans-serif;
+Line 27: }
+Line 28: *{box-sizing:border-box;margin:0;padding:0}
+Line 29: body{font-family:var(--fn);background:var(--bg);color:var(--t1);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+Line 30: ::-webkit-scrollbar{width:5px;height:5px}
+Line 31: ::-webkit-scrollbar-track{background:var(--bg)}
+Line 32: ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+Line 33: ::-webkit-scrollbar-thumb:hover{background:var(--cy)}
+Line 34: a{color:inherit;text-decoration:none}
+Line 35: button{font-family:var(--fn);cursor:pointer}
+Line 36: input,select,textarea{font-family:var(--fn)}
+Line 37: 
+Line 38: /* ============================================================
+Line 39:    LOGIN PAGE
+Line 40:    ============================================================ */
+Line 41: #loginPage {
+Line 42:   min-height:100vh; display:flex; align-items:center; justify-content:center;
+Line 43:   background: radial-gradient(ellipse at 60% 30%, rgba(37,99,235,.08) 0%, transparent 65%),
+Line 44:               radial-gradient(ellipse at 20% 80%, rgba(14,165,233,.05) 0%, transparent 55%),
+Line 45:               var(--bg);
