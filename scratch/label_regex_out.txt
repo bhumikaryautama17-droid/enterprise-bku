@@ -1,6 +1,0 @@
-﻿Test 1 (index_local_preview.html screen preview): 1 matches
-  Match: <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/6xeJSlAAAQAAAAEAABd/anVtYgAAAB5qdW1kYzJ ... e:8.5px;color:#444;text-align:center;line-height:1.4;font-weight:bold;">PT. BARA INDAH SINERGI</div>
-Test 2 (index_local_preview.html print preview): 0 matches
-Test 3 (JavaScript.html print preview): 1 matches
-  Match: <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/6xeJSlAAAQAAAAEAABd/anVtYgAAAB5qdW1kYzJ ... v style="font-size:8px; color:#111; font-weight:bold; line-height:1.2;">PT. BARA INDAH SINERGI</div>
-Test 4 (Code.js print PDF): 0 matches
