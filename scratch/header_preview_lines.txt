@@ -1,6 +1,0 @@
-﻿Line 516: <button class="btn btn-sm" id="btn-profile-signature" onclick="openSignatureModal()" style="padding: 5px 10px; font-size: 10px; margin-right: 8px; display: inline-flex; align-items: center; gap: 4px;">
-  Line 517: <i class="fas fa-signature" style="color:var(--cy);"></i> Custom TTD
-  Line 518: </button>
-  Line 519: <div class="h-user" id="hdrUser" onclick="openSignatureModal()" title="Klik untuk kustomisasi tanda tangan Anda">
-  Line 520: <div class="h-avatar" id="hdrAvt">MA</div>
-  Line 521: <div>
