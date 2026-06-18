@@ -1,0 +1,15 @@
+[
+  {"Code":"10100","Name":"Kas & Bank"},
+  {"Code":"10200","Name":"Piutang Usaha"},
+  {"Code":"10300","Name":"Persediaan Barang"},
+  {"Code":"20100","Name":"Hutang Usaha"},
+  {"Code":"50100","Name":"Beban Gaji & Tunjangan"},
+  {"Code":"50200","Name":"Beban Operasional Kantor"},
+  {"Code":"50300","Name":"Beban Listrik & Air"},
+  {"Code":"50400","Name":"Beban Transportasi & Perjalanan"},
+  {"Code":"50500","Name":"Beban Konsumsi & Rapat"},
+  {"Code":"50600","Name":"Beban Pemeliharaan Aset"},
+  {"Code":"50700","Name":"Beban Pajak & Retribusi"},
+  {"Code":"50800","Name":"Beban CSR & Eksternal"},
+  {"Code":"50900","Name":"Beban Alat Tulis & Dokumentasi"}
+]
