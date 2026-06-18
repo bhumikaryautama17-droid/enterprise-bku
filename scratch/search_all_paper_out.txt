@@ -1,0 +1,47 @@
+﻿Found .paper in: index_local_preview.html
+  Line 293: .paper{background:#fff;color:#111;margin:22px;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.5);overflow:hidden;min-width:700px}
+  Line 294: .paper-hdr{display:grid;grid-template-columns:auto 1fr auto;border-bottom:2px solid #c8102e}
+  Line 295: .paper-logo-cell{padding:12px 16px;border-right:1px solid #ddd;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:160px}
+  Line 296: .paper-logo-name{font-size:18px;font-weight:900;color:#c8102e;letter-spacing:1px;line-height:1}
+  Line 297: .paper-logo-group{font-size:9px;font-weight:700;letter-spacing:2px;color:#666;text-transform:uppercase;margin-top:2px}
+  Line 298: .paper-logo-sub{font-size:9px;color:#333;margin-top:6px;text-align:center;line-height:1.4}
+  Line 299: .paper-title-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+  Line 300: .paper-form-label{font-size:11px;color:#555;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+  Line 301: .paper-form-name{font-size:20px;font-weight:800;color:#111;letter-spacing:1px}
+  Line 302: .paper-meta-cell{padding:0;border-left:1px solid #ddd;min-width:220px}
+  Line 303: .paper-meta-row{display:grid;grid-template-columns:120px 1fr;font-size:10px;border-bottom:1px solid #eee}
+  Line 304: .paper-meta-row:last-child{border-bottom:none}
+  Line 305: .paper-meta-label{padding:6px 8px;background:#f5f5f5;font-weight:700;border-right:1px solid #eee;color:#555}
+  Line 306: .paper-meta-val{padding:6px 8px;font-weight:600}
+  Line 308: .paper-fields{padding:12px 16px 0;display:grid;grid-template-columns:60px 1fr;gap:4px 10px;font-size:11px}
+  Line 316: .paper-tbl-wrap{margin:12px 16px}
+  Line 317: .paper-tbl{width:100%;border-collapse:collapse;font-size:10.5px}
+  Line 318: .paper-tbl th{background:#c8102e;color:#fff;padding:7px 6px;text-align:center;font-weight:700;font-size:10px;border:1px solid #a00}
+  Line 319: .paper-tbl th small{display:block;font-size:8px;font-weight:400;opacity:.85}
+  Line 320: .paper-tbl td{padding:5px 6px;border:1px solid #ddd;font-size:10.5px;vertical-align:middle}
+  Line 321: .paper-tbl td input,.paper-tbl td select{border:none;outline:none;width:100%;font-size:10.5px;font-family:sans-serif;background:transparent;color:#111}
+  Line 322: .paper-tbl td input[type=number]{text-align:right}
+  Line 323: .paper-tbl .td-num{text-align:center;background:#f9f9f9;font-weight:700;width:28px}
+  Line 324: .paper-tbl .td-del{text-align:center;width:28px}
+  Line 325: .paper-tbl .del-btn{background:none;border:none;color:#c8102e;cursor:pointer;font-size:13px}
+  Line 326: .paper-tbl .total-row{background:#f5f5f5;font-weight:700}
+  Line 327: .paper-add-row{display:inline-flex;align-items:center;gap:6px;margin:8px 16px;font-size:10px;color:#c8102e;cursor:pointer;font-weight:700;background:rgba(200,16,46,.06);border:1px solid rgba(200,16,46,.2);padding:4px 10px;border-radius:4px}
+  Line 328: .paper-add-row:hover{background:rgba(200,16,46,.12)}
+  Line 329: .paper-terbilang{margin:4px 16px 10px;padding:6px 10px;background:#f9f9f9;border:1px solid #eee;font-size:10px;color:#555}
+  Line 330: .paper-terbilang span{font-weight:700;color:#111}
+  Line 342: .paper-sig-section{margin:12px 16px}
+  Line 343: .paper-sig-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid #ddd}
+  Line 344: .paper-sig-col{border-right:1px solid #ddd;text-align:center}
+  Line 345: .paper-sig-col:last-child{border-right:none}
+  Line 346: .paper-sig-colhdr{background:#f5f5f5;font-size:9px;font-weight:700;padding:5px;border-bottom:1px solid #ddd;color:#333}
+  Line 347: .paper-sig-colhdr.wide{grid-column:span 2}
+  Line 348: .paper-sig-inner{padding:8px 5px 6px}
+  Line 349: .paper-sig-space{height:55px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  Line 350: .paper-sig-name{font-size:9px;font-weight:700;border-top:1px solid #999;padding-top:5px;margin-top:4px}
+  Line 351: .paper-sig-title{font-size:8px;color:#555}
+  Line 352: .paper-sig-status{font-size:8px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:10px;display:inline-block}
+  Line 353: .paper-sig-status.pend{background:#fff3e0;color:#e65100}
+  Line 354: .paper-sig-status.app{background:#e8f5e9;color:#2e7d32}
+  Line 370: .paper-footer{padding:10px 16px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:4px}
+  Line 371: .paper-footer-note{font-size:9px;color:#888}
+  Line 389: .paper { box-shadow: none; margin: 0; }
