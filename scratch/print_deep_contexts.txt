@@ -1,0 +1,137 @@
+﻿=== Match 3 Deep Context (Index 308551) ===
+xt-align:center;">' + (item.costElement || item.CostElement || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center; font-weight:bold;">' + (item.qty || item.Quantity || 0) + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center;">' + (item.uom || item.UoM || 'Unit') + '</td>' +
+        '</tr>';
+    });
+    
+    const isStock = doc.inventoryType === 'STOCK' ? '&#10003;' : '&nbsp;&nbsp;';
+    const isNonStock = doc.inventoryType === 'NON STOCK' || !doc.inventoryType ? '&#10003;' : '&nbsp;&nbsp;';
+    
+    const sigUser = getSigBoxData(sigs.user, 'user');
+    const sigHead = getSigBoxData(sigs.supervisor || sigs.headDept, 'supervisor');
+    const sigFin = getSigBoxData(sigs.finance, 'finance');
+    const sigPm = getSigBoxData(sigs.projectManager, 'projectManager');
+    
+    const getPRSupervisor = (dept) => {
+      const mapping = {
+        'HRGA': 'Mona Asrani',
+        'SHE': 'Rosmina Rabbang',
+        'External': 'Erwin Eka',
+        'QAQC': 'Yusril',
+        'Engineering': 'Roymon Biang',
+        'Plant': 'Muh. Said',
+        'Eksplorasi': 'Laode Rusman',
+        'Exploration': 'Laode Rusman'
+      };
+      return mapping[dept] || '';
+    };
+
+    if (sigUser.name === '-') sigUser.name = doc.requester || (session ? session.name : 'Mona Asrani');
+    if (sigHead.name === '-') sigHead.name = getPRSupervisor(doc.dept || 'HRGA') || getSignerName('Supervisor', doc.dept || 'HRGA', 'Mona Asrani');
+    if (sigFin.name === '-') sigFin.name = 'Putri Amalia';
+    if (sigPm.name === '-') sigPm.name = 'Rosalia Natalia';
+    
+    return `
+      <style>
+        @media print {
+          @page { size: A4 portrait; margin: 0; }
+          body { margin: 0; padding: 8mm; }
+        }
+        .page-break-preview {
+          page-break-before: always;
+        }
+        @media screen {
+          .page-break-preview {
+            border-top: 2px dashed #cbd5e1;
+            margin-top: 30px !important;
+            padding-top: 15px !important;
+            position: relative;
+            page-break-before: auto;
+          }
+          .page-break-preview::before {
+            content: "HALAMAN BARU / NEW PAGE (LAMPIRAN)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            font-size: 8px;
+            color: #64748b;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+          }
+        }
+      </style>
+      <div style="font-family:Arial,sans-serif; background:#fff; color:#111; padding:15px; font-size:9.5px; border:1.5px solid #111; box-sizing:border-box; max-width:800px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:12px; background-color:#e0e0e0;">
+          <tr>
+            <td style="width:15%; text-align:center; border:1.5px solid #111; padding:6px; vertical-align:middle;">
+              <img src="
+====================================
+=== Match 4 Deep Context (Index 337184) ===
+
+    const budgetVariant = budgetAvail - doc.nominal;
+    const brVariantColor = budgetVariant >= 0 ? '#2e7d32' : '#c62828';
+    
+    const sigPrepared = getSigBoxData(sigs.user, 'user');
+    const sigVerified = getSigBoxData(sigs.headDept, 'headDept');
+    const sigApprovedPm = getSigBoxData(sigs.projectManager, 'projectManager');
+    const sigCheckedFin = getSigBoxData(sigs.finance, 'finance');
+    const sigCheckedCc = getSigBoxData(sigs.costControl, 'costControl');
+    
+    if (sigPrepared.name === '-') sigPrepared.name = doc.requester || (session ? session.name : 'Mona Asrani');
+    if (sigVerified.name === '-') sigVerified.name = getSignerName('Head Department', doc.dept || 'HRGA', 'Rosalia Natalia');
+    if (sigApprovedPm.name === '-') sigApprovedPm.name = getSignerName('Project Manager', 'Operation', 'Yohanes Sam');
+    if (sigCheckedFin.name === '-') sigCheckedFin.name = getSignerName('Finance', 'Finance', 'Putri Amalia/Fakihun');
+    if (sigCheckedCc.name === '-') sigCheckedCc.name = getSignerName('Cost Control', 'Finance', 'Janrizal/Dwi Wibowo');
+    
+    const sigCheckedAcc = getSigBoxData(sigs.accountingHO || {}, 'accountingHO');
+    if (sigCheckedAcc.name === '-') sigCheckedAcc.name = getSignerName('Accounting HO', 'Finance', 'Arista/Sinta Agnes');
+
+    
+    const sigDisbPm = getSigBoxData(sigs.gmDept || {}, 'gmDept');
+    if (sigDisbPm.name === '-') sigDisbPm.name = getSignerName('GM/CFO', 'Management', 'Sjamsi Josal');
+    
+    const sigDisbCfo = getSigBoxData(sigs.gmCfo, 'gmCfo');
+    if (sigDisbCfo.name === '-') sigDisbCfo.name = getSignerName('COO', 'Management', 'Fransiscus Vici S.');
+    
+    return `
+      <style>
+        @media print {
+          @page { size: A4 landscape; margin: 0; }
+          body { margin: 0; padding: 8mm; }
+        }
+        .page-break-preview {
+          page-break-before: always;
+        }
+        @media screen {
+          .page-break-preview {
+            border-top: 2px dashed #cbd5e1;
+            margin-top: 30px !important;
+            padding-top: 15px !important;
+            position: relative;
+            page-break-before: auto;
+          }
+          .page-break-preview::before {
+            content: "HALAMAN BARU / NEW PAGE (LAMPIRAN)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            font-size: 8px;
+            color: #64748b;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+          }
+        }
+      </style>
+      <div style="font-family:Arial,sans-serif; background:#fff; color:#111; padding:10px; font-size:9px; border:1.5px solid #111; box-sizing:border-box; max-width:1080px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:8px;">
+          <tr>
+            <td style="width:25%; text-align:center; border:1px solid #111; padding:6px; vertical-align:middle;">
+              <img src="
+====================================
