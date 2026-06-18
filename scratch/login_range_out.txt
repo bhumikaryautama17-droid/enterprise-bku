@@ -1,0 +1,51 @@
+﻿Line 1330:         <button class="form-btn submit" onclick="document.getElementById('submit-matrix-form-btn').click()"><i class="fas fa-save"></i> Simpan Matrix</button>
+Line 1331:       </div>
+Line 1332:     </div>
+Line 1333:   </div>
+Line 1334: 
+Line 1335:   <!-- ================== LOGIN OVERLAY SCREEN ================== -->
+Line 1336:   <div id="login-page" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:radial-gradient(ellipse at 60% 30%, rgba(41,121,255,0.18) 0%, transparent 65%), radial-gradient(ellipse at 20% 80%, rgba(0,229,255,0.1) 0%, transparent 55%), var(--bg-primary); z-index:9998; justify-content:center; align-items:center;">
+Line 1337:     <div class="login-card" style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:16px; padding:36px; width:380px; max-width:92%; box-shadow:0 24px 60px rgba(0,0,0,0.5); backdrop-filter:blur(12px);">
+Line 1338:       <div class="login-logo" style="display:flex; align-items:center; gap:12px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border-color);">
+Line 1339:         <div class="logo-icon" style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--accent-cyan),var(--accent-blue)); display:flex; align-items:center; justify-content:center; font-weight:800; color:#ffffff; font-size:18px; flex-shrink:0;">B</div>
+Line 1340:         <div style="display:flex; flex-direction:column;">
+Line 1341:           <div class="logo-text" style="font-size:14px; font-weight:700; line-height:1.2; color:var(--text-primary);">BARA INDAH <span style="color:var(--accent-cyan);">SINERGI</span> GROUP</div>
+Line 1342:           <div class="logo-sub" style="font-size:9.5px; color:var(--text-secondary); margin-top:2px;">E-Procurement & Workflow Approval System</div>
+Line 1343:         </div>
+Line 1344:       </div>
+Line 1345:       <h2 style="font-size:18px; font-weight:800; margin-bottom:6px; color:var(--text-primary);">Selamat Datang</h2>
+Line 1346:       <p style="font-size:11px; color:var(--text-secondary); margin-bottom:20px;">Silakan login dengan akun Anda untuk mengakses E-Procurement.</p>
+Line 1347:       
+Line 1348:       <form id="login-form" onsubmit="handleLoginSubmit(event)">
+Line 1349:         <div class="form-group" style="margin-bottom:14px;">
+Line 1350:           <label style="font-size:9.5px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:4px; display:block;">Username</label>
+Line 1351:           <input type="text" id="login-username" value="Rosalia.Natalia" placeholder="Masukkan username..." required style="width:100%; padding:9px 12px; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); outline:none; font-size:12px; transition: var(--transition-fast);">
+Line 1352:         </div>
+Line 1353:         <div class="form-group" style="margin-bottom:14px;">
+Line 1354:           <label style="font-size:9.5px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:4px; display:block;">Password</label>
+Line 1355:           <input type="password" id="login-password" value="BARAindah@2026" placeholder="••••••••" required style="width:100%; padding:9px 12px; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); outline:none; font-size:12px; transition: var(--transition-fast);">
+Line 1356:         </div>
+Line 1357:         <div id="login-error-message" style="display:none; color:var(--accent-red); font-size:10.5px; margin-bottom:12px; font-weight:600;"><i class="fas fa-exclamation-circle"></i> Username atau password salah.</div>
+Line 1358:         <button type="submit" class="form-btn submit" style="width:100%; padding:10px; justify-content:center; font-size:12px;"><i class="fas fa-sign-in-alt"></i> &nbsp;Login Sekarang</button>
+Line 1359:       </form>
+Line 1360:       
+Line 1361:       <div style="display: none; margin-top:20px; padding-top:14px; border-top:1px solid var(--border-color);">
+Line 1362:         <div style="font-size:9.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">Akun Demo (Klik untuk isi otomatis)</div>
+Line 1363:         <div id="demo-users-chips" style="display:flex; flex-wrap:wrap; gap:5px;">
+Line 1364:           <!-- seeded dynamically -->
+Line 1365:         </div>
+Line 1366:       </div>
+Line 1367:     </div>
+Line 1368:   </div>
+Line 1369: 
+Line 1370:   <!-- Toast Alerts Container -->
+Line 1371:   <div id="toast-container" style="position:fixed; bottom:20px; right:20px; z-index:99999;"></div>
+Line 1372: 
+Line 1373:   <!-- Injected Client-Side JavaScript -->
+Line 1374:   <?!= include('JavaScript'); ?>
+Line 1375: 
+Line 1376: </body>
+Line 1377: </html>
+Line 1378: 
+Line 1379: 
+Line 1380: 
