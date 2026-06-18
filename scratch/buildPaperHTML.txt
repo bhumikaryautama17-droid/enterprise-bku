@@ -1,0 +1,560 @@
+﻿function buildPaperHTML(doc) {
+  const sigs = doc.sigs;
+  
+  const formatDate = function(dateStr) {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+  
+  const formatCurrency = function(num) {
+    return "Rp " + new Intl.NumberFormat('id-ID').format(num || 0);
+  };
+  
+  const terbilangText = terbilang(doc.nominal);
+  
+  const getSignerName = (role, dept, defaultName) => {
+    const u = DB.users.find(u => u.role === role && (dept ? u.dept === dept : true));
+    return u ? u.name : defaultName;
+  };
+
+  const getSigBoxData = function(sigObj, roleKey) {
+    let sigContent = '';
+    let name = '-';
+    let date = '';
+    let statusClass = 'pend';
+    let statusText = 'PENDING';
+    
+    if (sigObj && (sigObj.status === 'SUBMITTED' || sigObj.status === 'APPROVED')) {
+      name = sigObj.name;
+      date = formatDate(sigObj.date);
+      statusClass = 'app';
+      statusText = sigObj.status === 'SUBMITTED' ? 'SUBMITTED' : 'APPROVED';
+      if (sigObj.signatureText && sigObj.signatureText.indexOf('data:image') === 0) {
+        sigContent = '<img src="' + sigObj.signatureText + '" style="max-height:40px; max-width:110px; object-fit:contain;" />';
+      } else if (sigObj.signature && sigObj.signature.indexOf('data:image') === 0) {
+        sigContent = '<img src="' + sigObj.signature + '" style="max-height:40px; max-width:110px; object-fit:contain;" />';
+      } else {
+        sigContent = genSVGSig(sigObj.name).replace('class="esig"','style="width:110px;height:38px"').replace('stroke:var(--cy)','stroke:#1565c0');
+      }
+    } else if (sigObj && sigObj.status === 'REJECTED') {
+      name = sigObj.name;
+      date = formatDate(sigObj.date);
+      statusClass = 'rej';
+      statusText = 'REJECTED';
+      sigContent = '<span style="color:#ff1744; font-weight:bold; font-size:9px;">REJECTED</span>';
+    } else if (roleKey) {
+      // Fallback signature image lookup from DB.users for visual match
+      const signerName = getSignerName(roleKey, '', '');
+      const dbUser = DB.users.find(u => u.name === signerName);
+      if (dbUser && dbUser.signature && dbUser.signature.indexOf('data:image') === 0) {
+        sigContent = '<img src="' + dbUser.signature + '" style="max-height:40px; max-width:110px; object-fit:contain; opacity:0.9;" />';
+      }
+    }
+    
+    return {
+      content: sigContent,
+      name: name,
+      date: date,
+      statusText: statusText,
+      statusClass: statusClass
+    };
+  };
+
+  if (doc.type === 'PR') {
+    // ==========================================
+    // PURCHASE REQUEST PDF TEMPLATE
+    // ==========================================
+    let itemsRowsHTML = '';
+    doc.items.forEach(function(item, idx) {
+      itemsRowsHTML += '<tr>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center;">' + (idx + 1) + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center; font-weight:bold;">' + (item.coa || item.COA || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center;">' + (item.partNo || item.PartNumber || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:5px;">' + (item.desc || item.Description || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center;">' + (item.costElement || item.CostElement || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center; font-weight:bold;">' + (item.qty || item.Quantity || 0) + '</td>' +
+        '<td style="border:1px solid #111; padding:5px; text-align:center;">' + (item.uom || item.UoM || 'Unit') + '</td>' +
+        '</tr>';
+    });
+    
+    const isStock = doc.inventoryType === 'STOCK' ? '&#10003;' : '&nbsp;&nbsp;';
+    const isNonStock = doc.inventoryType === 'NON STOCK' || !doc.inventoryType ? '&#10003;' : '&nbsp;&nbsp;';
+    
+    const sigUser = getSigBoxData(sigs.user, 'user');
+    const sigHead = getSigBoxData(sigs.supervisor || sigs.headDept, 'supervisor');
+    const sigFin = getSigBoxData(sigs.finance, 'finance');
+    const sigPm = getSigBoxData(sigs.projectManager, 'projectManager');
+    
+    const getPRSupervisor = (dept) => {
+      const mapping = {
+        'HRGA': 'Mona Asrani',
+        'SHE': 'Rosmina Rabbang',
+        'External': 'Erwin Eka',
+        'QAQC': 'Yusril',
+        'Engineering': 'Roymon Biang',
+        'Plant': 'Muh. Said',
+        'Eksplorasi': 'Laode Rusman',
+        'Exploration': 'Laode Rusman'
+      };
+      return mapping[dept] || '';
+    };
+
+    if (sigUser.name === '-') sigUser.name = doc.requester || (session ? session.name : 'Mona Asrani');
+    if (sigHead.name === '-') sigHead.name = getPRSupervisor(doc.dept || 'HRGA') || getSignerName('Supervisor', doc.dept || 'HRGA', 'Mona Asrani');
+    if (sigFin.name === '-') sigFin.name = 'Putri Amalia';
+    if (sigPm.name === '-') sigPm.name = 'Rosalia Natalia';
+    
+    return `
+      <style>
+        @media print {
+          @page { size: A4 portrait; margin: 0; }
+          body { margin: 0; padding: 8mm; }
+        }
+        .page-break-preview {
+          page-break-before: always;
+        }
+        @media screen {
+          .page-break-preview {
+            border-top: 2px dashed #cbd5e1;
+            margin-top: 30px !important;
+            padding-top: 15px !important;
+            position: relative;
+            page-break-before: auto;
+          }
+          .page-break-preview::before {
+            content: "HALAMAN BARU / NEW PAGE (LAMPIRAN)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            font-size: 8px;
+            color: #64748b;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+          }
+        }
+      </style>
+      <div style="font-family:Arial,sans-serif; background:#fff; color:#111; padding:15px; font-size:9.5px; border:1.5px solid #111; box-sizing:border-box; max-width:800px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:12px; background-color:#e0e0e0;">
+          <tr>
+            <td style="width:15%; text-align:center; border:1.5px solid #111; padding:6px; vertical-align:middle;">
+              <img src="data:image/png;base64,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" style="max-height:100px; max-width:100%; object-fit:contain;" />
+            </td>
+            <td style="width:50%; border:1.5px solid #111; padding:6px 12px; vertical-align:middle; text-align:left;">
+              <div style="font-size:14px; font-weight:bold; color:#000; line-height:1.2; font-family:Arial, sans-serif;">PT. BHUMI KARYA UTAMA</div>
+              <div style="font-size:9px; color:#000; margin-top:4px; line-height:1.3; font-family:Arial, sans-serif;">
+                Jl. Pluit Permai No. 12B  RT 01 RW 07 Pluit, Kec. Penjaringan - Jakarta Utara 14450
+              </div>
+              <div style="font-size:9px; color:#000; margin-top:2px; line-height:1.3; font-family:Arial, sans-serif;">
+                Tlp : 021-26063593 / Fax : 021-26063591
+              </div>
+            </td>
+            <td style="width:35%; text-align:center; border:1.5px solid #111; padding:6px; vertical-align:middle;">
+              <div style="font-size:14px; font-weight:bold; color:#000; line-height:1.2; font-family:Arial, sans-serif;">PR</div>
+              <div style="font-size:14px; font-weight:bold; color:#000; margin-top:4px; line-height:1.2; font-family:Arial, sans-serif;">PURCHASE REQUEST</div>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Info Metadata Table -->
+        <table style="width:100%; border-collapse:collapse; border:1px solid #111; margin-bottom:12px;">
+          <tr>
+            <td style="width:35%; border:1px solid #111; padding:0; vertical-align:top;">
+              <table style="width:100%; border-collapse:collapse;">
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:75px; border-right:1px solid #ddd; padding:4px 6px; border-bottom:1px solid #111;">PR No.</td><td style="border-bottom:1px solid #111; padding:4px; font-weight:bold;">${doc.docNumber}</td></tr>
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:75px; border-right:1px solid #ddd; padding:4px 6px; border-bottom:1px solid #111;">PR Date</td><td style="border-bottom:1px solid #111; padding:4px;">${formatDate(doc.date)}</td></tr>
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:75px; border-right:1px solid #ddd; padding:4px 6px;">Department</td><td style="padding:4px;">${doc.dept}</td></tr>
+              </table>
+            </td>
+            <td style="width:18%; text-align:center; border:1px solid #111; padding:0; vertical-align:top;">
+              <div style="background:#f5f5f5; border-bottom:1px solid #111; padding:4px; font-weight:bold;">Priority</div>
+              <div style="padding:12px 4px; font-size:11px; font-weight:bold; color:#c8102e;">${doc.priority || 'P2'}</div>
+            </td>
+            <td style="width:22%; border:1px solid #111; padding:0; vertical-align:top;">
+              <div style="background:#f5f5f5; border-bottom:1px solid #111; padding:4px; font-weight:bold; text-align:center;">Inventory Type</div>
+              <div style="padding:8px 10px; line-height:1.5;">
+                <div><span style="display:inline-block; width:10px; height:10px; border:1px solid #111; margin-right:4px; text-align:center; line-height:9px; font-size:8px; font-weight:bold;">${isStock}</span> STOCK</div>
+                <div style="margin-top:3px;"><span style="display:inline-block; width:10px; height:10px; border:1px solid #111; margin-right:4px; text-align:center; line-height:9px; font-size:8px; font-weight:bold;">${isNonStock}</span> NON STOCK</div>
+              </div>
+            </td>
+            <td style="width:25%; text-align:center; border:1px solid #111; padding:0; vertical-align:top;">
+              <div style="background:#f5f5f5; border-bottom:1px solid #111; padding:4px; font-weight:bold;">Purchase Category</div>
+              <div style="padding:12px 4px; font-weight:bold;">${doc.purchaseCategory || 'Office Equipment'}</div>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Items Table -->
+        <table style="width:100%; border-collapse:collapse; border:1px solid #111; margin-bottom:12px; font-size:9px;">
+          <thead>
+            <tr>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">No.</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">COA</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">Part Number</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">Description</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">Cost Element</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">Quantity</th>
+              <th style="background:#f5f5f5; color:#111; padding:5px; font-weight:bold; text-align:center; border:1px solid #111; text-transform:uppercase;">UoM</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsRowsHTML}
+          </tbody>
+        </table>
+        
+        <!-- User For Box -->
+        <div style="border:1px solid #111; padding:8px; margin-bottom:12px; background-color:#FFFF00;">
+          <strong>User For:</strong><br>
+          <div style="margin-top:4px; color:#333;">${doc.userFor || '-'}</div>
+        </div>
+
+        
+        <div style="font-size:7.5px; color:#666; margin-bottom:12px; font-style:italic;">* Untuk menghindari kesalahan, harap menggunakan bahasa umum yang mudah dimengerti dan menyertakan spesifikasi yang lengkap disertai gambar atau contoh barang</div>
+        
+        <!-- Signatures Grid -->
+        <table style="width:100%; border-collapse:collapse; text-align:center; font-size:9px; margin-top:15px;">
+          <thead>
+            <tr style="background:#f5f5f5; font-weight:bold;">
+              <th style="width:25%; border:1px solid #111; padding:4px;">DIBUAT OLEH</th>
+              <th style="width:25%; border:1px solid #111; padding:4px;">DIVERIFIKASI OLEH</th>
+              <th style="width:25%; border:1px solid #111; padding:4px;">DIVERIFIKASI OLEH</th>
+              <th style="width:25%; border:1px solid #111; padding:4px;">DISETUJUI OLEH</th>
+            </tr>
+            <tr style="background:#f9f9f9; font-size:8px;">
+              <th style="border:1px solid #111; padding:4px;">USER</th>
+              <th style="border:1px solid #111; padding:4px;">SUPERVISOR</th>
+              <th style="border:1px solid #111; padding:4px;">FINANCE</th>
+              <th style="border:1px solid #111; padding:4px;">PROJECT MANAGER</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="height:52px; vertical-align:middle; border:1px solid #111; padding:4px;">${sigUser.content}</td>
+              <td style="height:52px; vertical-align:middle; border:1px solid #111; padding:4px;">${sigHead.content}</td>
+              <td style="height:52px; vertical-align:middle; border:1px solid #111; padding:4px;">${sigFin.content}</td>
+              <td style="height:52px; vertical-align:middle; border:1px solid #111; padding:4px;">${sigPm.content}</td>
+            </tr>
+            <tr style="font-weight:bold; font-size:8.5px;">
+              <td style="border:1px solid #111; padding:4px;">${sigUser.name}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigHead.name}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigFin.name}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigPm.name}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #111; padding:4px;"><span class="status-pill ${sigUser.statusClass}">${sigUser.statusText}</span></td>
+              <td style="border:1px solid #111; padding:4px;"><span class="status-pill ${sigHead.statusClass}">${sigHead.statusText}</span></td>
+              <td style="border:1px solid #111; padding:4px;"><span class="status-pill ${sigFin.statusClass}">${sigFin.statusText}</span></td>
+              <td style="border:1px solid #111; padding:4px;"><span class="status-pill ${sigPm.statusClass}">${sigPm.statusText}</span></td>
+            </tr>
+            <tr style="font-size:7.5px; color:#555;">
+              <td style="border:1px solid #111; padding:4px;">${sigUser.date || '-'}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigHead.date || '-'}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigFin.date || '-'}</td>
+              <td style="border:1px solid #111; padding:4px;">${sigPm.date || '-'}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        ${doc.attachment ? `
+          <div class="page-break-preview" style="border:1px solid #111; padding:8px; margin-top:20px;">
+            <div style="font-weight:bold; font-size:10px; border-bottom:1px solid #111; padding-bottom:3px; margin-bottom:5px; text-transform:uppercase;">Lampiran / Attachments:</div>
+            ${doc.attachment.indexOf('data:application/pdf') === 0 ? 
+              `<div class="pdf-rendering-container" data-pdf="${doc.attachment}" style="text-align:center; padding:10px;">Mengurai halaman PDF...</div>` :
+              (doc.attachment.indexOf('data:image') === 0 ? 
+                `<div style="text-align:center; padding:10px;"><img src="${doc.attachment}" style="width:100%; max-width:100%; height:auto; object-fit:contain;" /></div>` : 
+                `<div style="padding:10px;"><a href="${doc.attachment}" download="${doc.attachmentName || 'lampiran'}" style="color:#1565c0; text-decoration:underline; font-weight:bold;">Unduh Lampiran (${doc.attachmentName || 'File'})</a></div>`
+              )
+            }
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } else {
+    // ==========================================
+    // PERMOHONAN DANA (PD) PDF TEMPLATE
+    // ==========================================
+    let itemsRowsHTML = '';
+    doc.items.forEach(function(item, idx) {
+      itemsRowsHTML += '<tr>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:center;">' + (idx + 1) + '</td>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:center; font-weight:bold;">' + (item.PC || item.COA || item.coa || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:center;">' + (item.DR || item.CostElement || item.costElement || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:4px;">' + (item.desc || item.Description || '-') + '</td>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:center;">' + (item.qty || item.Quantity || 1) + '</td>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:right;">' + formatCurrency(item.price || item.Price || 0).substring(3) + '</td>' +
+        '<td style="border:1px solid #111; padding:4px; text-align:right; font-weight:bold;">' + formatCurrency(item.amount || item.Total || 0).substring(3) + '</td>' +
+        '<td style="border:1px solid #111; padding:4px;">' + (item.info || doc.userFor || '-') + '</td>' +
+        '</tr>';
+    });
+    
+    // Simulate budget check for specific department
+    const deptBudget = DB.budgets.find(b => b.Dept === doc.dept);
+    const brPC = deptBudget ? (deptBudget.Project || 'BHL.22.105.001') : 'BHL.22.105.001';
+    const brDR = deptBudget ? (deptBudget.Dept || 'TOB3,CE0831,LM001,LA01') : 'TOB3,CE0831,LM001,LA01';
+    const annualLimit = deptBudget ? (parseFloat(deptBudget.Annual) || 10000000) : 10000000;
+    const actualSpent = deptBudget ? (parseFloat(deptBudget.Actual) || 1650000) : 1650000;
+    const budgetAvail = annualLimit - actualSpent;
+    const budgetVariant = budgetAvail - doc.nominal;
+    const brVariantColor = budgetVariant >= 0 ? '#2e7d32' : '#c62828';
+    
+    const sigPrepared = getSigBoxData(sigs.user, 'user');
+    const sigVerified = getSigBoxData(sigs.headDept, 'headDept');
+    const sigApprovedPm = getSigBoxData(sigs.projectManager, 'projectManager');
+    const sigCheckedFin = getSigBoxData(sigs.finance, 'finance');
+    const sigCheckedCc = getSigBoxData(sigs.costControl, 'costControl');
+    
+    if (sigPrepared.name === '-') sigPrepared.name = doc.requester || (session ? session.name : 'Mona Asrani');
+    if (sigVerified.name === '-') sigVerified.name = getSignerName('Head Department', doc.dept || 'HRGA', 'Rosalia Natalia');
+    if (sigApprovedPm.name === '-') sigApprovedPm.name = getSignerName('Project Manager', 'Operation', 'Yohanes Sam');
+    if (sigCheckedFin.name === '-') sigCheckedFin.name = getSignerName('Finance', 'Finance', 'Putri Amalia/Fakihun');
+    if (sigCheckedCc.name === '-') sigCheckedCc.name = getSignerName('Cost Control', 'Finance', 'Janrizal/Dwi Wibowo');
+    
+    const sigCheckedAcc = getSigBoxData(sigs.accountingHO || {}, 'accountingHO');
+    if (sigCheckedAcc.name === '-') sigCheckedAcc.name = getSignerName('Accounting HO', 'Finance', 'Arista/Sinta Agnes');
+
+    
+    const sigDisbPm = getSigBoxData(sigs.gmDept || {}, 'gmDept');
+    if (sigDisbPm.name === '-') sigDisbPm.name = getSignerName('GM/CFO', 'Management', 'Sjamsi Josal');
+    
+    const sigDisbCfo = getSigBoxData(sigs.gmCfo, 'gmCfo');
+    if (sigDisbCfo.name === '-') sigDisbCfo.name = getSignerName('COO', 'Management', 'Fransiscus Vici S.');
+    
+    return `
+      <style>
+        @media print {
+          @page { size: A4 landscape; margin: 0; }
+          body { margin: 0; padding: 8mm; }
+        }
+        .page-break-preview {
+          page-break-before: always;
+        }
+        @media screen {
+          .page-break-preview {
+            border-top: 2px dashed #cbd5e1;
+            margin-top: 30px !important;
+            padding-top: 15px !important;
+            position: relative;
+            page-break-before: auto;
+          }
+          .page-break-preview::before {
+            content: "HALAMAN BARU / NEW PAGE (LAMPIRAN)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            font-size: 8px;
+            color: #64748b;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+          }
+        }
+      </style>
+      <div style="font-family:Arial,sans-serif; background:#fff; color:#111; padding:10px; font-size:9px; border:1.5px solid #111; box-sizing:border-box; max-width:1080px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:8px;">
+          <tr>
+            <td style="width:25%; text-align:center; border:1px solid #111; padding:6px; vertical-align:middle;">
+              <img src="data:image/png;base64,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" style="max-height:95px; max-width:100%; object-fit:contain; display:block; margin:0 auto 3px auto;" />\r\n              <div style="font-size:8px; color:#111; font-weight:bold; line-height:1.2;">PT. BHUMI KARYA UTAMA</div>
+            </td>
+            <td style="width:45%; text-align:center; border:1px solid #111; padding:6px; vertical-align:middle;">
+              <div style="font-size:9px; color:#555; font-weight:bold; letter-spacing:1px;">FORMULIR</div>
+              <div style="font-size:15px; font-weight:900; color:#111; letter-spacing:0.5px; margin-top:2px;">PERMOHONAN DANA</div>
+            </td>
+            <td style="width:30%; padding:0; border:1px solid #111; vertical-align:middle;">
+              <table style="width:100%; border-collapse:collapse;">
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:80px; border-right:1px solid #ddd; padding:3px 5px; border-bottom:1px solid #eee;">No Dokumen</td><td style="border-bottom:1px solid #eee; padding:3px 5px; font-weight:bold;">BIS.FR.FAT.001</td></tr>
+
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:80px; border-right:1px solid #ddd; padding:3px 5px; border-bottom:1px solid #eee;">Tanggal Efektif</td><td style="border-bottom:1px solid #eee; padding:3px 5px;">01-Jan-26</td></tr>
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:80px; border-right:1px solid #ddd; padding:3px 5px; border-bottom:1px solid #eee;">Revisi</td><td style="border-bottom:1px solid #eee; padding:3px 5px;">01</td></tr>
+                <tr><td style="font-weight:bold; color:#444; background:#f5f5f5; width:80px; border-right:1px solid #ddd; padding:3px 5px;">Halaman</td><td style="padding:3px 5px;">1 dari 1</td></tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Metadata table rows -->
+        <table style="width:100%; border-collapse:collapse; border:1px solid #111; margin-bottom:8px; font-size:9.5px;">
+          <tr>
+            <td style="font-weight:bold; color:#444; background:#f5f5f5; width:12%; border:1px solid #111; padding:4px;">NO</td>
+            <td style="width:3%; text-align:center; font-weight:bold; border:1px solid #111; padding:4px;">:</td>
+            <td style="font-weight:bold; color:#111; border:1px solid #111; padding:4px;">${doc.docNumber}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold; color:#444; background:#f5f5f5; width:12%; border:1px solid #111; padding:4px;">TGL</td>
+            <td style="text-align:center; font-weight:bold; border:1px solid #111; padding:4px;">:</td>
+            <td style="border:1px solid #111; padding:4px;">${formatDate(doc.date)}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold; color:#444; background:#f5f5f5; width:12%; border:1px solid #111; padding:4px;">DEPT</td>
+            <td style="text-align:center; font-weight:bold; border:1px solid #111; padding:4px;">:</td>
+            <td style="border:1px solid #111; padding:4px;">${doc.dept}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold; color:#444; background:#f5f5f5; width:12%; border:1px solid #111; padding:4px;">SUBJECT</td>
+            <td style="text-align:center; font-weight:bold; border:1px solid #111; padding:4px;">:</td>
+            <td style="font-weight:bold; border:1px solid #111; padding:4px;">${doc.subject}</td>
+          </tr>
+        </table>
+        
+        <!-- Items Table -->
+        <table style="width:100%; border-collapse:collapse; border:1px solid #111; margin-bottom:8px;">
+          <thead>
+            <tr>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:4%;">NO</th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:16%;">PC<br><small style="font-weight:normal; font-size:7.5px;">(PROJECT CODE)</small></th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:22%;">DR<br><small style="font-weight:normal; font-size:7.5px;">(DISTRIBUTION RULES)<br>*Diisi Oleh Cost Control</small></th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase;">DESCRIPTION</th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:6%;">QTY</th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:12%;">PRICE</th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:14%;">AMOUNT (IDR)</th>
+              <th style="background:#f5f5f5; color:#111; padding:4px; font-weight:bold; border:1px solid #111; font-size:9px; text-transform:uppercase; width:16%;">INFORMATION</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsRowsHTML}
+            <tr style="font-weight:bold; background:#f5f5f5;">
+              <td colspan="5" style="border:1px solid #111; padding:4px; text-align:right;">TOTAL PERMOHONAN DANA :</td>
+              <td style="border:1px solid #111; padding:4px; text-align:center;">Rp</td>
+              <td style="border:1px solid #111; padding:4px; text-align:right; color:#c8102e;">${formatCurrency(doc.nominal).substring(3)}</td>
+              <td style="border:1px solid #111; padding:4px;"></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- Terbilang Box -->
+        <div style="background:#fafafa; border:1px solid #ddd; padding:6px 10px; font-size:9px; margin-bottom:8px;">Terbilang : <strong>${terbilangText} rupiah</strong></div>
+        
+        <!-- Budget Review -->
+        <div style="font-size:8.5px; font-weight:bold; margin-bottom:4px;">Budget Review <span style="font-weight:normal; font-style:italic; color:#666;">*Diisi Oleh Cost Control</span></div>
+        <table style="width:100%; border-collapse:collapse; border:1px solid #111; text-align:center; margin-bottom:8px;">
+          <thead>
+            <tr>
+              <th style="background:#e3f2fd; color:#111; border:1px solid #111; padding:4px; font-size:9px; font-weight:bold; width:20%;">PC</th>
+              <th style="background:#e3f2fd; color:#111; border:1px solid #111; padding:4px; font-size:9px; font-weight:bold; width:22%;">DR</th>
+              <th style="background:#e3f2fd; color:#111; border:1px solid #111; padding:4px; font-size:9px; font-weight:bold; width:20%;">Budget Available</th>
+              <th style="background:#e3f2fd; color:#111; border:1px solid #111; padding:4px; font-size:9px; font-weight:bold; width:20%;">Budget Actual</th>
+              <th style="background:#e3f2fd; color:#111; border:1px solid #111; padding:4px; font-size:9px; font-weight:bold; width:18%;">Variant (a-b)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:bold; border:1px solid #111; padding:4px;"></td>
+              <td style="border:1px solid #111; padding:4px;"></td>
+              <td style="font-weight:bold; border:1px solid #111; padding:4px;"></td>
+              <td style="border:1px solid #111; padding:4px;"></td>
+              <td style="font-weight:bold; border:1px solid #111; padding:4px;"></td>
+            </tr>
+
+          </tbody>
+        </table>
+        
+        <!-- Signatures Grid -->
+        <table style="width:100%; border-collapse:collapse; text-align:center; font-size:8.5px; table-layout:fixed;">
+          <thead>
+            <tr style="background:#f5f5f5; font-weight:bold;">
+              <th style="width:12.5%; border:1px solid #111; padding:3px;">Prepared By,</th>
+              <th style="width:12.5%; border:1px solid #111; padding:3px;">Verified By,</th>
+              <th style="width:12.5%; border:1px solid #111; padding:3px;">Approved By,</th>
+              <th colspan="3" style="width:37.5%; border:1px solid #111; padding:3px;">Verification Column<br><small style="font-weight:normal; font-size:7.5px;">Checked By.</small></th>
+              <th colspan="2" style="width:25%; border:1px solid #111; padding:3px;">Disbursement Approval<br><small style="font-weight:normal; font-size:7.5px;">Approved By.</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigPrepared.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigVerified.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigApprovedPm.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigCheckedFin.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigCheckedCc.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigCheckedAcc.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigDisbPm.content}</td>
+              <td style="height:35px; vertical-align:middle; border:1px solid #111; padding:3px;">${sigDisbCfo.content}</td>
+            </tr>
+            <tr style="font-weight:bold; font-size:8px;">
+              <td style="border:1px solid #111; padding:3px;">${sigPrepared.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigVerified.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigApprovedPm.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigCheckedFin.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigCheckedCc.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigCheckedAcc.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigDisbPm.name}</td>
+              <td style="border:1px solid #111; padding:3px;">${sigDisbCfo.name}</td>
+            </tr>
+            <tr style="font-size:7.5px; color:#555; font-weight:normal; vertical-align:top;">
+              <td style="border:1px solid #111; padding:3px;">USER</td>
+              <td style="border:1px solid #111; padding:3px;">Dept. Head Department<br>/ Project Manager</td>
+              <td style="border:1px solid #111; padding:3px;">Project Manager /<br>Operation Manager</td>
+              <td style="border:1px solid #111; padding:3px;">Finance Site</td>
+              <td style="border:1px solid #111; padding:3px;">Cost Control</td>
+              <td style="border:1px solid #111; padding:3px;">Accounting HO</td>
+              <td style="border:1px solid #111; padding:3px;">Project Manager /<br>GM Operation / COO</td>
+              <td style="border:1px solid #111; padding:3px;">GM FAT / CFO</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- Approval Matrix -->
+        <table style="width:100%; border-collapse:collapse; text-align:center; font-size:8.5px; border:1px solid #111; table-layout:fixed; margin-top:15px;">
+          <thead>
+            <tr style="font-weight:bold;">
+              <th style="border:1px solid #111; padding:3px; background:#ccc; font-style:italic; width:25%;">Matriks Persetujuan</th>
+              <th style="border:1px solid #111; padding:3px; width:25%;">Diajukan</th>
+              <th style="border:1px solid #111; padding:3px; width:25%;">Disetujui</th>
+              <th style="border:1px solid #111; padding:3px; width:25%;">Persetujuan Pencairan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #111; padding:3px; font-weight:bold;">&le; 5 Juta Rupiah</td>
+              <td style="border:1px solid #111; padding:3px;">User (Supervisor)</td>
+              <td style="border:1px solid #111; padding:3px;">Dept. Head</td>
+              <td style="border:1px solid #111; padding:3px;">PM / Manager</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #111; padding:3px; font-weight:bold;">&gt; 5 Jt - 44 Jt Rupiah</td>
+              <td style="border:1px solid #111; padding:3px;">Dept Head</td>
+              <td style="border:1px solid #111; padding:3px;">PM / Manager</td>
+              <td style="border:1px solid #111; padding:3px;">Board of Executive</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #111; padding:3px; font-weight:bold;">&gt; 45 jt - &le; 100 jt</td>
+              <td style="border:1px solid #111; padding:3px;">PM/ Manager</td>
+              <td style="border:1px solid #111; padding:3px;">GM</td>
+              <td style="border:1px solid #111; padding:3px;">BOE & GM FAT</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #111; padding:3px; font-weight:bold;">&gt; 100 jt</td>
+              <td style="border:1px solid #111; padding:3px;">Manager / GM</td>
+              <td style="border:1px solid #111; padding:3px;">BOE</td>
+              <td style="border:1px solid #111; padding:3px;">GM FAT / CFO</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        ${doc.budgetCapture ? `
+          <div style="border:1px solid #111; padding:8px; margin-top:12px; page-break-inside:avoid;">
+            <div style="font-weight:bold; font-size:10px; border-bottom:1px solid #111; padding-bottom:3px; margin-bottom:5px; text-transform:uppercase;">Capture Budget / Bukti Budget:</div>
+            <div style="text-align:center;"><img src="${doc.budgetCapture}" style="max-height:280px; max-width:100%; object-fit:contain;" /></div>
+          </div>
+        ` : ''}
+        
+        ${doc.attachment ? `
+          <div class="page-break-preview" style="border:1px solid #111; padding:8px; margin-top:20px;">
+            <div style="font-weight:bold; font-size:10px; border-bottom:1px solid #111; padding-bottom:3px; margin-bottom:5px; text-transform:uppercase;">Lampiran / Attachments:</div>
+            ${doc.attachment.indexOf('data:application/pdf') === 0 ? 
+              `<div class="pdf-rendering-container" data-pdf="${doc.attachment}" style="text-align:center; padding:10px;">Mengurai halaman PDF...</div>` :
+              (doc.attachment.indexOf('data:image') === 0 ? 
+                `<div style="text-align:center; padding:10px;"><img src="${doc.attachment}" style="width:100%; max-width:100%; height:auto; object-fit:contain;" /></div>` : 
+                `<div style="padding:10px;"><a href="${doc.attachment}" download="${doc.attachmentName || 'lampiran'}" style="color:#1565c0; text-decoration:underline; font-weight:bold;">Unduh Lampiran (${doc.attachmentName || 'File'})</a></div>`
+              )
+            }
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+}
