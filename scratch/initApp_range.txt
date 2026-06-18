@@ -1,0 +1,36 @@
+﻿Line 1640:   $('loginPage').style.display = 'flex';
+Line 1641:   $('loginUser').value = '';
+Line 1642:   $('loginPass').value = '';
+Line 1643: }
+Line 1644: 
+Line 1645: /* ==============================================
+Line 1646:    APP INIT
+Line 1647:    ============================================== */
+Line 1648: function initApp() {
+Line 1649:   // Update header
+Line 1650:   const initials = session.name.split(' ').map(n=>n[0]).join('').slice(0,2);
+Line 1651:   $('hdrAvt').textContent = initials;
+Line 1652:   $('hdrName').textContent = session.name;
+Line 1653:   $('hdrRole').textContent = session.role;
+Line 1654: 
+Line 1655:   // Show/hide Admin menus
+Line 1656:   const isAdmin = session && session.role === 'Administrator';
+Line 1657:   const userItem = document.querySelector('.sb-item[data-view="master-user"]');
+Line 1658:   const matrixItem = document.querySelector('.sb-item[data-view="matrix"]');
+Line 1659:   if (userItem) userItem.style.display = isAdmin ? 'block' : 'none';
+Line 1660:   if (matrixItem) matrixItem.style.display = isAdmin ? 'block' : 'none';
+Line 1661: 
+Line 1662:   // Nav events
+Line 1663:   document.querySelectorAll('.sb-item').forEach(item => {
+Line 1664:     item.addEventListener('click', () => nav(item.getAttribute('data-view')));
+Line 1665:   });
+Line 1666: 
+Line 1667:   // Pending badge
+Line 1668:   updatePendingBadge();
+Line 1669: 
+Line 1670:   // Load dashboard
+Line 1671:   nav('dashboard');
+Line 1672: }
+Line 1673: 
+Line 1674: function updatePendingBadge() {
+Line 1675:   const count = DB.requests.filter(r => r.status === 'Pending' && r.currentApprover === session.role).length;
