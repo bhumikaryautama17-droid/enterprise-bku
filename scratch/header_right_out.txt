@@ -1,0 +1,12 @@
+﻿Found header-right at index 5131
+header-right">
+          <!-- Active Role Selector (hidden for login system, kept for backwards compatibility) -->
+          <select id="user-role-select" style="display:none;"></select>
+          
+          <!-- Profile Signature Button -->
+          <button class="form-btn" id="btn-profile-signature" onclick="openSignatureModal()" style="padding: 6px 12px; font-size: 11px;">
+            <i class="fas fa-signature" style="color:var(--accent-cyan);"></i> Custom TTD
+          </button>
+          
+          <!-- Notif Bell -->
+          <div style="position: relative; display: inline-block; vert
