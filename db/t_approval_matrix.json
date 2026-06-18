@@ -1,0 +1,5 @@
+[
+  {"id":"M-1","type":"PR","dept":"ALL","min":0,"max":15000000,"steps":["Supervisor","Finance","Project Manager"]},
+  {"id":"M-2","type":"PR","dept":"ALL","min":15000001,"max":1000000000000,"steps":["Supervisor","Finance","Project Manager","Cost Control","GM/CFO"]},
+  {"id":"M-3","type":"PD","dept":"ALL","min":0,"max":1000000000000,"steps":["Head Department","Finance","Project Manager","Cost Control","GM/CFO"]}
+]
