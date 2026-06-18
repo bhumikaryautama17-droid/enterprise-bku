@@ -1,0 +1,12 @@
+﻿Line 295: .icon-button {
+  Line 296: background: transparent;
+  Line 297: border: none;
+  Line 298: color: var(--text-secondary);
+  Line 299: font-size: 18px;
+  Line 300: cursor: pointer;
+Line 305: .icon-button:hover {
+  Line 306: color: var(--text-primary);
+  Line 307: }
+  Line 308: 
+  Line 309: .badge-dot {
+  Line 310: position: absolute;
