@@ -1,0 +1,25 @@
+﻿Match 1 at Index 49626 (Length: 151207)
+  Context before: y:Arial,sans-serif; background:#fff; color:#111; padding:15px; font-size:9.5px; border:1.5px solid #111; box-sizing:border-box; max-width:800px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:12px; background-color:#e0e0e0;">
+          <tr>
+            <td style="width:15%; text-align:center; border:1.5px solid #111; padding:6px; vertical-align:middle;">
+              <img src="' + (doc.type === 'PD' ? '
+  Context after: ' : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABcCAYAAABgK+tjAAAQAElEQVR4AexcCXwV1dU/s8+8eXvy8rIQtqAsiiigbAHDlhD2xcQFQXGjWrVV+33VajUtbb9WW1qLn9a6UHFBiYCENSRAFJAdFEVFlkBClpfk5e3zZp/vjv3Fj6rkB
+---------------------------------------------------
+Match 2 at Index 200838 (Length: 12890)
+  Context before: S0AFFGR6iigAooyPUUUAFFGR6/5HWigAooyPUUUAFFGR6jnp70ZHqKACikyPUfnS5Hr16UAFFGR6/5HWigAooyPUc9PejI9evSgAooyPUc9PekyPUfnQAtFJkeo/OlyPXr096ACikyPUfnS5Hr16UAFFGR6/wCR1ooAKKMj1/yOtGR69elABRSZHqPzoyPUfnQAtFJkeo/OloAKKMj1HPT3oyPX/PX+XNABRSZHqPzpcj1FABRSZHqPzpcj1oAKKMj1/wAjrRQAUUZHqKKACijI9f8AI60ZHrQAUUmR6j86XI9RQAUUmR6j86Mj1H50ALRSZHqPzpcj1FABRSZHqPzpcj1HPT3oAKKTI9R+dLQAUUmR6j86Mj1H50ALRSZHqPzoyPUfnQAtFJkeo79x26/l3oyPUfnQAtFJkeo79x26/l3oyPUfnQAtITgH1wTjOOn+evajI9R37jt1/LvTSwwwBU8dNw5yMYx79Pfj8AD/2Q==' : '
+  Context after: ') + '" style="max-height:65px; max-width:100%; object-fit:contain; display:block; margin:0 auto 3px auto;" />\r\n              <div style="font-size:8.5px;color:#444;text-align:center;line-height:1.4
+---------------------------------------------------
+Match 3 at Index 229425 (Length: 12890)
+  Context before:  }
+        }
+      </style>
+      <div style="font-family:Arial,sans-serif; background:#fff; color:#111; padding:10px; font-size:9px; border:1.5px solid #111; box-sizing:border-box; max-width:1080px; margin:0 auto;">
+        <!-- Header -->
+        <table style="width:100%; border-collapse:collapse; border:1.5px solid #111; margin-bottom:8px;">
+          <tr>
+            <td style="width:25%; text-align:center; border:1px solid #111; padding:6px; vertical-align:middle;">
+              <img src="
+  Context after: " style="max-height:95px; max-width:100%; object-fit:contain; display:block; margin:0 auto 3px auto;" />\r\n              <div style="font-size:8px; color:#111; font-weight:bold; line-height:1.2;">PT.
+---------------------------------------------------
