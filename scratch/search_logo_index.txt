@@ -1,7 +1,0 @@
-﻿Line 38: <div class="logo-section">
-Line 39: <div class="logo-icon">B</div>
-Line 40: <div class="logo-text">BARA INDAH<span>SINERGI</span><br><small style="font-size:9px; color:var(--text-muted);">GROUP</small></div>
-Line 1327: <div class="login-logo" style="display:flex; align-items:center; gap:12px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border-color);">
-Line 1328: <div class="logo-icon" style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--accent-cyan),var(--accent-blue)); display:flex; align-items:center; justify-content:center; font-weight:800; color:#ffffff; font-size:18px; flex-shrink:0;">B</div>
-Line 1330: <div class="logo-text" style="font-size:14px; font-weight:700; line-height:1.2; color:var(--text-primary);">BARA INDAH <span style="color:var(--accent-cyan);">SINERGI</span> GROUP</div>
-Line 1331: <div class="logo-sub" style="font-size:9.5px; color:var(--text-secondary); margin-top:2px;">E-Procurement & Workflow Approval System</div>
