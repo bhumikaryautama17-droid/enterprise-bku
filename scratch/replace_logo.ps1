@@ -1,0 +1,28 @@
+$logoPath = "C:\Users\LENOVO\.gemini\antigravity\brain\5c617ef8-ad48-4adb-95da-ff1e01be0e47\media__1780712097102.png"
+$logoBytes = [IO.File]::ReadAllBytes($logoPath)
+$logoBase64 = [Convert]::ToBase64String($logoBytes)
+
+$jsHtmlPath = "JavaScript.html"
+$localHtmlPath = "index_local_preview.html"
+
+# Load the file content
+$jsContent = [IO.File]::ReadAllText((Resolve-Path $jsHtmlPath))
+$localContent = [IO.File]::ReadAllText((Resolve-Path $localHtmlPath))
+
+# The old base64 string starts with the unique sequence:
+# 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
+# We can use a regex to match and replace the base64 part.
+# The target pattern matches 'data:image/png;base64,' followed by the long base64 string
+# which is basically any characters until the double quote (").
+$pattern = 'data:image/png;base64,[A-Za-z0-9+/=\s\r\n]+'
+$replacement = 'data:image/png;base64,' + $logoBase64
+
+# Replace in both files
+$newJsContent = [System.Text.RegularExpressions.Regex]::Replace($jsContent, $pattern, $replacement)
+$newLocalContent = [System.Text.RegularExpressions.Regex]::Replace($localContent, $pattern, $replacement)
+
+# Save back to files
+[IO.File]::WriteAllText((Resolve-Path $jsHtmlPath), $newJsContent, [System.Text.Encoding]::UTF8)
+[IO.File]::WriteAllText((Resolve-Path $localHtmlPath), $newLocalContent, [System.Text.Encoding]::UTF8)
+
+Write-Output "Successfully updated logo base64 in JavaScript.html and index_local_preview.html!"
