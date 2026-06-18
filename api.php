@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Check if this is a zip deployment request
 if (isset($_GET['action']) && $_GET['action'] === 'deploy') {
     $key = isset($_GET['key']) ? $_GET['key'] : (isset($_POST['key']) ? $_POST['key'] : '');
-    define('DEPLOY_KEY', 'enterprise.bku.my.id'); // Secret deploy key
+    define('DEPLOY_KEY', 'enterprise-bku.my.id'); // Secret deploy key
     if ($key !== DEPLOY_KEY) {
         header('HTTP/1.0 403 Forbidden');
         echo json_encode(['success' => false, 'error' => 'Forbidden: Invalid Deploy Key']);
