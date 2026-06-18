@@ -1,0 +1,9 @@
+[
+  {"id":"B-1","dept":"HRGA","annual":500000000,"actual":0,"remaining":500000000,"year":2026},
+  {"id":"B-2","dept":"SHE","annual":450000000,"actual":0,"remaining":450000000,"year":2026},
+  {"id":"B-3","dept":"External","annual":300000000,"actual":0,"remaining":300000000,"year":2026},
+  {"id":"B-4","dept":"QAQC","annual":250000000,"actual":0,"remaining":250000000,"year":2026},
+  {"id":"B-5","dept":"Engineering","annual":600000000,"actual":0,"remaining":600000000,"year":2026},
+  {"id":"B-6","dept":"Plant","annual":800000000,"actual":0,"remaining":800000000,"year":2026},
+  {"id":"B-7","dept":"Eksplorasi","annual":500000000,"actual":0,"remaining":500000000,"year":2026}
+]
