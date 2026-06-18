@@ -1,0 +1,51 @@
+﻿Line 430: .chart-header {
+Line 431:   display: flex;
+Line 432:   justify-content: space-between;
+Line 433:   align-items: center;
+Line 434:   margin-bottom: 16px;
+Line 435: }
+Line 436: 
+Line 437: .chart-title {
+Line 438:   font-size: 13px;
+Line 439:   font-weight: 700;
+Line 440: }
+Line 441: 
+Line 442: .chart-canvas-container {
+Line 443:   height: 220px;
+Line 444:   position: relative;
+Line 445: }
+Line 446: 
+Line 447: /* Dept Overview and Approval Progress columns */
+Line 448: .dashboard-middle-grid {
+Line 449:   display: grid;
+Line 450:   grid-template-columns: 3fr 2fr;
+Line 451:   gap: 20px;
+Line 452:   margin-bottom: 24px;
+Line 453: }
+Line 454: 
+Line 455: .panel-card {
+Line 456:   background-color: var(--bg-card);
+Line 457:   border: 1px solid var(--border-color);
+Line 458:   border-radius: 12px;
+Line 459:   padding: 20px;
+Line 460:   backdrop-filter: blur(10px);
+Line 461: }
+Line 462: 
+Line 463: .panel-title {
+Line 464:   font-size: 13px;
+Line 465:   font-weight: 700;
+Line 466:   margin-bottom: 16px;
+Line 467: }
+Line 468: 
+Line 469: /* Dept Overview List */
+Line 470: .dept-grid {
+Line 471:   display: grid;
+Line 472:   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+Line 473:   gap: 12px;
+Line 474: }
+Line 475: 
+Line 476: .dept-mini-card {
+Line 477:   background: var(--bg-tertiary);
+Line 478:   border: 1px solid var(--border-color);
+Line 479:   border-radius: 8px;
+Line 480:   padding: 12px;
