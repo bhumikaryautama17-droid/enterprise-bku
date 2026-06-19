@@ -503,7 +503,7 @@ function getDropdownData($db) {
     $coas = $stmt->fetchAll();
     
     // Get Users (needed for matrix manager lookup)
-    $stmt = $db->query("SELECT id AS ID, username AS Username, fullname AS Fullname, role AS Role, department AS Department, password AS Password, status AS Status, email AS Email FROM m_users ORDER BY username ASC");
+    $stmt = $db->query("SELECT id AS ID, username AS Username, fullname AS Fullname, role AS Role, department AS Department, password AS Password, status AS Status, signature AS Signature, email AS Email FROM m_users ORDER BY username ASC");
     $users = $stmt->fetchAll();
     
     // Get Matrix
@@ -583,7 +583,7 @@ function getApprovalRequests($role, $db) {
                 'subject' => $req['subject'],
                 'requester' => $req['requester'],
                 'nominal' => (float)$req['total_nominal'],
-                'signatures' => json_decode($req['signatures'], true),
+                'signatures' => json_decode(decompressRow($req['signatures']), true),
                 'userFor' => $req['user_for']
             ];
         }
@@ -611,7 +611,7 @@ function getRequestDetails($requestId, $db) {
     $stmt->execute([$req['department']]);
     $budget = $stmt->fetch() ?: null;
     
-    $sigs = json_decode($req['signatures'], true) ?: [];
+    $sigs = json_decode(decompressRow($req['signatures']), true) ?: [];
     
     return [
         'metadata' => [
@@ -669,7 +669,7 @@ function submitRequest($metadata, $items, $db) {
     $stmtRequester = $db->prepare("SELECT signature FROM m_users WHERE fullname = ? OR username = ? LIMIT 1");
     $stmtRequester->execute([$metadata['requester'], $metadata['requester']]);
     $requesterObj = $stmtRequester->fetch();
-    $requesterSig = ($requesterObj && $requesterObj['signature']) ? $requesterObj['signature'] : "[e-Signed: " . $metadata['requester'] . "]";
+    $requesterSig = ($requesterObj && $requesterObj['signature']) ? decompressRow($requesterObj['signature']) : "[e-Signed: " . $metadata['requester'] . "]";
 
     // Initialize Signatures Array template
     $signatures = [];
@@ -788,7 +788,7 @@ function processApproval($requestId, $actionType, $role, $comment, $userName, $d
         $finalRole = 'Project Manager';
     }
     
-    $signatures = json_decode($request['signatures'], true) ?: [];
+    $signatures = json_decode(decompressRow($request['signatures']), true) ?: [];
     
     // Get matrix workflow steps
     $stmt = $db->prepare("SELECT * FROM t_approval_matrix WHERE doc_type = ? ORDER BY id ASC");
@@ -838,7 +838,7 @@ function processApproval($requestId, $actionType, $role, $comment, $userName, $d
         $stmt = $db->prepare("SELECT signature FROM m_users WHERE fullname = ? OR username = ? LIMIT 1");
         $stmt->execute([$userName, $userName]);
         $userObj = $stmt->fetch();
-        $userSig = ($userObj && $userObj['signature']) ? $userObj['signature'] : "[e-Signed: $userName | " . date('Y-m-d') . "]";
+        $userSig = ($userObj && $userObj['signature']) ? decompressRow($userObj['signature']) : "[e-Signed: $userName | " . date('Y-m-d') . "]";
         
         $signatures[$key] = [
             'name' => $userName,
@@ -956,7 +956,7 @@ function getDocumentHistory($db) {
             'subject' => $r['subject'],
             'requester' => $r['requester'],
             'nominal' => (float)$r['nominal'],
-            'signatures' => json_decode($r['signatures'], true) ?: [],
+            'signatures' => json_decode(decompressRow($r['signatures']), true) ?: [],
             'userFor' => $r['userFor'],
             'status' => $r['status'],
             'currentApprover' => $r['currentApprover']
@@ -1272,7 +1272,7 @@ function sendFullApprovalEmail($requestId, $db) {
     $nominalFormatted = "Rp " . number_format($request['total_nominal'], 0, ',', '.');
     
     // 4. Construct list of approvers who signed
-    $signatures = json_decode($request['signatures'], true) ?: [];
+    $signatures = json_decode(decompressRow($request['signatures']), true) ?: [];
     $approversListHtml = '';
     
     // We want to sort/list them in order of signing
@@ -1410,7 +1410,7 @@ function sendFullApprovalEmailWithPDF($requestId, $pdfBase64, $db) {
     $nominalFormatted = "Rp " . number_format($request['total_nominal'], 0, ',', '.');
     
     // 4. Construct list of approvers who signed
-    $signatures = json_decode($request['signatures'], true) ?: [];
+    $signatures = json_decode(decompressRow($request['signatures']), true) ?: [];
     $approversListHtml = '';
     foreach ($signatures as $key => $sig) {
         if ($key === 'user') continue;
@@ -1970,4 +1970,5 @@ function saveFuelStockOut($data, $db) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+// Trigger comment for auto sync
 ?>
